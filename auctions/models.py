@@ -19,7 +19,8 @@ class auctionListing(models.Model):
     description = models.CharField(max_length=500, null=True)
     imgLink = models.CharField(max_length=500, null=True)
     category = models.CharField(max_length=64, null=True)
-
+    leaderName = models.CharField(max_length=200, null = True)
+    isClosed = models.BooleanField(null=True)
 
 
 class bids(models.Model):

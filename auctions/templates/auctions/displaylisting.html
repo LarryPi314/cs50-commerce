@@ -27,33 +27,36 @@ Listing: {{ auctionListing.title }}
         {% endif %}
     </ul>
     <br>
-    <ul> 
-        {% for bid in listingBids %}
-            <li>Bidder: {{bid.bidder.username}} bidded ${{bid.bidVal}}</li>
-        {% empty %}
-            There are no bidders. Be the first to bid!
-        {% endfor %}
-    </ul>
-
-    {% if user.is_authenticated %}
-        {% if auctionListing.origin == user %}
-            <form action="{% url 'displaylisting' identifier=auctionListing.pk %}" method="post">
-                {% csrf_token %}
-                <button type="submit" name="pb" value="{{ auctionListing.pk }}">Take bid down and cash in</button>
-            </form>
-        {% else %}
-            <form action="{% url 'placebid' %}" method="post">
-                {% csrf_token %}
-                <input type="text" name="bidVal" placeholder="Place bid of number">
-                <button type="submit" name="pb" value="{{ auctionListing.pk }}">Place bid</button>
-            </form>
-            <form action="{% url 'watchlist' name=user.username %}" method="post">
-                {% csrf_token %}
-                <button type="submit" name="wl" value="{{ auctionListing.pk }}">Add to watchlist</button>
-            </form>
-        {% endif %}
+    {% if auctionListing.isClosed == True %}
+        <p>The list posting is closed. Users are no longer able to bid. Bidder {{auctionListing.leaderName}} won the bid!</p>
     {% else %}
-        Log In to place bids.
+        <ul> 
+            {% for bid in listingBids %}
+                <li>Bidder: {{bid.bidder.username}} bidded ${{bid.bidVal}}</li>
+            {% empty %}
+                There are no bidders. Be the first to bid!
+            {% endfor %}
+        </ul>
+        {% if user.is_authenticated %}
+            {% if auctionListing.origin == user %}
+                <form action="{% url 'displaylisting' identifier=auctionListing.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="pb" value="{{ auctionListing.pk }}">Take bid down and cash in</button>
+                </form>
+            {% else %}
+                <form action="{% url 'placebid' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="bidVal" placeholder="Place bid of number">
+                    <button type="submit" name="pb" value="{{ auctionListing.pk }}">Place bid</button>
+                </form>
+                <form action="{% url 'watchlist' name=user.username %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="wl" value="{{ auctionListing.pk }}">Add to watchlist</button>
+                </form>
+            {% endif %}
+        {% else %}
+            Log In to place bids.
+        {% endif %}
     {% endif %}
 
 {% endblock %}

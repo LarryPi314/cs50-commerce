@@ -67,7 +67,7 @@ def register(request):
         
 def post_listing(request, name):
     if request.method == "POST":
-        new_post = auctionListing(origin = request.user, startingBid = request.POST["startingBid"], title = request.POST["title"], description = request.POST["description"], imgLink = request.POST["imgurl"], category = request.POST["category"])
+        new_post = auctionListing(origin = request.user, startingBid = request.POST["startingBid"], title = request.POST["title"], description = request.POST["description"], imgLink = request.POST["imgurl"], category = request.POST["category"], isClosed = False)
         new_post.save()
         return render(request, "auctions/displaylisting.html", {
             "listingBids": bids.objects.filter(listingOn = new_post),
@@ -78,10 +78,8 @@ def post_listing(request, name):
 def display_listing(request, identifier):
     listing = auctionListing.objects.get(pk = identifier)
     if request.method == "POST":
-        listing.delete()
-        return render(request, "auctions/index.html", {
-            "auctionListings": auctionListing.objects.all()
-    })
+        listing.isClosed = True
+        listing.save()
     return render(request, "auctions/displaylisting.html", {
         "listingBids": bids.objects.filter(listingOn = listing),
         "auctionListing": listing
@@ -103,6 +101,8 @@ def watchlist(request, name):
 
 def place_bid(request):
     listing = auctionListing.objects.get(pk=int(request.POST["pb"]))
+    listing.leaderName = request.user.username
+    listing.save()
     is_valid = True
     if int(request.POST["bidVal"]) < listing.startingBid: 
         is_valid = False

@@ -4,24 +4,26 @@
 {% block body %}
     <h2 style="color:aqua">Active Listings</h2>
         {% for listing in auctionListings %}
-            <div style="border: 1px solid black; margin-top: 10px"> 
-                <h3><a href="{% url 'displaylisting' identifier=listing.pk %}">Listing: {{ listing.title }}</a></h3>
-                {% if listing.imgLink is null %}
-                    Category: No Image Included
-                {% else %}
-                    <img src="{{ listing.imgLink }}" alt="{{ listing.title }}" width="500" height="400">
-                {% endif %}
-                <h5>${{ listing.startingBid }}</h5>
-                <h4>Details: </h4>
-                <ul> 
-                    <li>Listed by: {{ listing.origin.username }}</li>
-                    {% if listing.category is null %}
-                        <li>Category: No Category Specified</li>
+            {% if listing.isClosed == False %}
+                <div style="border: 1px solid black; margin-top: 10px"> 
+                    <h3><a href="{% url 'displaylisting' identifier=listing.pk %}">Listing: {{ listing.title }}</a></h3>
+                    {% if listing.imgLink is null %}
+                        Category: No Image Included
                     {% else %}
-                        <li>Category: {{ listing.category }}</li>
+                        <img src="{{ listing.imgLink }}" alt="{{ listing.title }}" width="500" height="400">
                     {% endif %}
-                </ul>
-            </div>
+                    <h5>${{ listing.startingBid }}</h5>
+                    <h4>Details: </h4>
+                    <ul> 
+                        <li>Listed by: {{ listing.origin.username }}</li>
+                        {% if listing.category is null %}
+                            <li>Category: No Category Specified</li>
+                        {% else %}
+                            <li>Category: {{ listing.category }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
         {% empty %}
             There are no items for auction. 
         {% endfor %}
