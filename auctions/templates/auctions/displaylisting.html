@@ -57,6 +57,28 @@ Listing: {{ auctionListing.title }}
         {% else %}
             Log In to place bids.
         {% endif %}
+        <br>
+        <br>
+        <h3>Comments:</h3>
+        <ul>
+            {% for comment in Comments %}
+                <li>{{ comment.content }} - written by {{ comment.origin.username }}</li>
+            {% empty %}
+                There are no comments associated with this listing. Be the first to comment!
+            {% endfor %}
+        </ul>
+        {% if user.is_authenticated %}
+            <form action="{% url 'postcomment' %}" method="post">
+                {% csrf_token %}
+                <textarea type="text" name="content" rows="4" cols="50">Enter comment here.</textarea>
+                <br>
+                <button type="submit" name="listing" value="{{ auctionListing.pk }}">Post comment</button>
+            </form>
+        {% else %}
+        Log in to comment!
+        {% endif %}
+
+ 
     {% endif %}
 
 {% endblock %}

@@ -10,24 +10,26 @@
     {% endif %}
     <h2>Listings on {{user.username}}'s Watchlist</h2>
         {% for wl in auctionListings %}
-            <div style="border: 1px solid black; margin-top: 10px"> 
-                <h3><a href="{% url 'displaylisting' identifier=wl.listingOn.pk %}">Listing: {{ wl.listingOn.title }}</a></h3>
-                {% if wl.listingOn.imgLink is null %}
-                    Category: No Image Included
-                {% else %}
-                    <img src="{{ wl.listingOn.imgLink }}" alt="{{ wl.listingOn.title }}" width="500" height="400">
-                {% endif %}
-                <h5>${{ wl.listingOn.startingBid }}</h5>
-                <h4>Details: </h4>
-                <ul> 
-                    <li>Listed by: {{ wl.listingOn.origin.username }}</li>
-                    {% if wl.listingOn.category is null %}
-                        <li>Category: No Category Specified</li>
+            {% if wl.listingOn.isClosed == False %}
+                <div style="border: 1px solid black; margin-top: 10px"> 
+                    <h3><a href="{% url 'displaylisting' identifier=wl.listingOn.pk %}">Listing: {{ wl.listingOn.title }}</a></h3>
+                    {% if wl.listingOn.imgLink is null %}
+                        Category: No Image Included
                     {% else %}
-                        <li>Category: {{ wl.listingOn.category }}</li>
+                        <img src="{{ wl.listingOn.imgLink }}" alt="{{ wl.listingOn.title }}" width="500" height="400">
                     {% endif %}
-                </ul>
-            </div>
+                    <h5>${{ wl.listingOn.startingBid }}</h5>
+                    <h4>Details: </h4>
+                    <ul> 
+                        <li>Listed by: {{ wl.listingOn.origin.username }}</li>
+                        {% if wl.listingOn.category is null %}
+                            <li>Category: No Category Specified</li>
+                        {% else %}
+                            <li>Category: {{ wl.listingOn.category }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
         {% empty %}
             There are no items on your watchlist. 
         {% endfor %}

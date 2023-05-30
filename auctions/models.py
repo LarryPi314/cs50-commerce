@@ -37,4 +37,4 @@ class watchList(models.Model):
 class comments(models.Model):
     origin = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pplcomments")
     listingOn = models.ForeignKey(auctionListing, on_delete = models.CASCADE, related_name="itemcomments")
-    
+    content = models.CharField(max_length=500, null=True)

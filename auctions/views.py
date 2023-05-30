@@ -82,7 +82,8 @@ def display_listing(request, identifier):
         listing.save()
     return render(request, "auctions/displaylisting.html", {
         "listingBids": bids.objects.filter(listingOn = listing),
-        "auctionListing": listing
+        "auctionListing": listing,
+        "Comments": comments.objects.filter(listingOn = listing)
     })
 
 def watchlist(request, name):
@@ -114,14 +115,23 @@ def place_bid(request):
         new_bid.save()
         return render(request, "auctions/displaylisting.html", {
             "listingBids": bids.objects.filter(listingOn = listing),
-            "auctionListing": listing
+            "auctionListing": listing,
+            "Comments": comments.objects.filter(listingOn = listing)
         })
     else: 
         return render(request, "auctions/displaylisting.html", {
             "listingBids": bids.objects.filter(listingOn = listing),
             "auctionListing": listing,
+            "Comments": comments.objects.filter(listingOn = listing),
             "message": "Bid not valid, you must bid higher than the existing bid values."
         })
 
-
-
+def post_comment(request):
+    listing = auctionListing.objects.get(pk=int(request.POST["listing"]))
+    new_comment = comments(origin=request.user, listingOn=listing, content=request.POST["content"])
+    new_comment.save()
+    return render(request, "auctions/displaylisting.html", {
+        "listingBids": bids.objects.filter(listingOn = listing),
+        "auctionListing": listing, 
+        "Comments": comments.objects.filter(listingOn = listing)
+    })
