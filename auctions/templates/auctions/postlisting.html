@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Post Listing
+{% endblock %}
+
+{% block body %}
+    <h3>Post Listing</h2>
+    {% if user.is_authenticated %}
+        <form action="{% url 'postlisting' name=user.username}" method="post">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Enter title here">
+            <br>
+            <input type="text" name="startingBid" placeholder="Enter starting price here">
+            <br>
+            <textarea type="text" name="description" rows="4" cols="50">Enter description here.</textarea>
+            <br>
+            <input type="text" name="imgurl" placeholder="(optional) Enter image URL here">
+            <br>
+            <input type="text" name="category" placeholder="(optional) Enter category here">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    {% else %}
+        You must login to access this function. 
+    {% endif %}
+{% endblock %}
+

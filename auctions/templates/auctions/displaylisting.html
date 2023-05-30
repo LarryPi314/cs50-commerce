@@ -1,0 +1,59 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Listing: {{ auctionListing.title }}
+{% endblock %}
+
+{% block body %}
+    {% if message %}
+        {{ message }}
+    {% endif %}
+    <h3>Listing: {{ auctionListing.title }}</h3>
+    {% if auctionListing.imgLink is null %}
+        Category: No Image Included
+    {% else %}
+        <img src="{{ auctionListing.imgLink }}" alt="{{ auctionListing.title }}" width="500" height="400">
+    {% endif %}
+    <br>
+    {{ auctionListing.description }}
+    <h5>${{ auctionListing.startingBid }}</h5>
+    <h4>Details: </h4>
+    <ul> 
+        <li>Listed by: {{ auctionListing.origin.username }}</li>
+        {% if auctionListing.category is null %}
+            <li>Category: No Category Specified</li>
+        {% else %}
+            <li>Category: {{ auctionListing.category }}</li>
+        {% endif %}
+    </ul>
+    <br>
+    <ul> 
+        {% for bid in listingBids %}
+            <li>Bidder: {{bid.bidder.username}} bidded ${{bid.bidVal}}</li>
+        {% empty %}
+            There are no bidders. Be the first to bid!
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        {% if auctionListing.origin == user %}
+            <form action="{% url 'displaylisting' identifier=auctionListing.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="pb" value="{{ auctionListing.pk }}">Take bid down and cash in</button>
+            </form>
+        {% else %}
+            <form action="{% url 'placebid' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="bidVal" placeholder="Place bid of number">
+                <button type="submit" name="pb" value="{{ auctionListing.pk }}">Place bid</button>
+            </form>
+            <form action="{% url 'watchlist' name=user.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="wl" value="{{ auctionListing.pk }}">Add to watchlist</button>
+            </form>
+        {% endif %}
+    {% else %}
+        Log In to place bids.
+    {% endif %}
+
+{% endblock %}
