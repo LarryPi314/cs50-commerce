@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+    <h2>Categories</h2>
+    <ul>
+        {% for categoryname in distinct_values %}
+            <li><a href="{% url 'cat' cat=categoryname.category %}">{{ categoryname.category }}</a></li>
+        {% empty %}
+            There are no categories. Be the first to post a listing with a category!
+        {% endfor %}
+    </ul>
+{% endblock %}

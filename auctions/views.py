@@ -135,3 +135,18 @@ def post_comment(request):
         "auctionListing": listing, 
         "Comments": comments.objects.filter(listingOn = listing)
     })
+
+def display_categories(request):
+    distinct_values = auctionListing.objects.values('category').distinct()
+    return render(request, "auctions/display_categories.html", {
+        "distinct_values": distinct_values
+    })
+
+def cat_listings(request, cat):
+    return render(request, "auctions/catlistings.html", {
+        "auctionListings": auctionListing.objects.filter(category=cat),
+        "category": cat
+    })
+
+
+
